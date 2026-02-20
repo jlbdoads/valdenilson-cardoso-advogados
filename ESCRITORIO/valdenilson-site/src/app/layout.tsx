@@ -39,7 +39,7 @@ function Header() {
           <a href="#home" className="text-gray-300 hover:text-[#C9A227] transition-colors">Home</a>
           <a href="#sobre" className="text-gray-300 hover:text-[#C9A227] transition-colors">Quem Somos</a>
           <a href="#equipe" className="text-gray-300 hover:text-[#C9A227] transition-colors">Equipe</a>
-         areas" className <a href="#="text-gray-300 hover:text-[#C9A227] transition-colors">Áreas</a>
+          <a href="#areas" className="text-gray-300 hover:text-[#C9A227] transition-colors">Áreas</a>
           <a href="#contato" className="text-gray-300 hover:text-[#C9A227] transition-colors">Contato</a>
         </nav>
 
