@@ -1,20 +1,19 @@
-import type { Metadata } from "next";
-import "./globals.css";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Valdenilson Cardoso de Sá Advogados",
-  description: "Escritório de advocacia em Maringá - PR. Expertise em direito empresarial, trabalhista e tributário.",
-};
+import { useState } from "react";
+import Image from "next/image";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <html lang="pt-BR">
       <body className="antialiased">
-        <Header />
+        <Header mobileMenuOpen={mobileMenuOpen} setMobileMenuOpen={setMobileMenuOpen} />
         <main>{children}</main>
         <Footer />
       </body>
@@ -22,55 +21,128 @@ export default function RootLayout({
   );
 }
 
-function Header() {
-  return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <a href="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#1B5E3E] to-[#C9A227] flex items-center justify-center">
-            <span className="text-white font-bold text-lg">V</span>
-          </div>
-          <span className="text-white font-semibold text-lg hidden sm:block">
-            Valdenilson Cardoso de Sá
-          </span>
-        </a>
-        
-        <nav className="hidden md:flex items-center gap-8">
-          <a href="#home" className="text-gray-300 hover:text-[#C9A227] transition-colors">Home</a>
-          <a href="#sobre" className="text-gray-300 hover:text-[#C9A227] transition-colors">Quem Somos</a>
-          <a href="#equipe" className="text-gray-300 hover:text-[#C9A227] transition-colors">Equipe</a>
-          <a href="#areas" className="text-gray-300 hover:text-[#C9A227] transition-colors">Áreas</a>
-          <a href="#contato" className="text-gray-300 hover:text-[#C9A227] transition-colors">Contato</a>
-        </nav>
+function Header({ mobileMenuOpen, setMobileMenuOpen }: { mobileMenuOpen: boolean; setMobileMenuOpen: (open: boolean) => void }) {
+  const navItems = [
+    { href: "#home", label: "Home" },
+    { href: "#sobre", label: "Sobre" },
+    { href: "#equipe", label: "Equipe" },
+    { href: "#areas", label: "Áreas" },
+    { href: "#planos", label: "Planos" },
+    { href: "#contato", label: "Contato" },
+  ];
 
-        <a 
-          href="https://wa.me/5544999862409?text=Olá,%20gostaria%20de%20agendar%20uma%20consultoria."
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-gradient-to-r from-[#1B5E3E] to-[#145230] text-white px-5 py-2 rounded-full font-medium hover:from-[#2a7a5a] hover:to-[#1B5E3E] transition-all transform hover:scale-105"
-        >
-          Falar no WhatsApp
-        </a>
+  return (
+    <>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <a href="/" className="flex items-center gap-3">
+            <div className="w-12 h-12 relative">
+              <Image 
+                src="/logo.png" 
+                alt="Valdenilson Cardoso de Sá"
+                width={48}
+                height={48}
+                className="rounded-lg"
+              />
+            </div>
+            <div className="hidden sm:block">
+              <span className="text-gray-900 font-semibold text-sm leading-tight block">
+                Valdenilson Cardoso de Sá
+              </span>
+              <span className="text-gray-500 text-xs">Advogados Associados</span>
+            </div>
+          </a>
+          
+          {/* Desktop Nav */}
+          <nav className="hidden lg:flex items-center gap-8">
+            {navItems.map((item) => (
+              <a 
+                key={item.href} 
+                href={item.href} 
+                className="text-gray-600 hover:text-[#1B5E3E] transition-colors text-sm font-medium"
+              >
+                {item.label}
+              </a>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-3">
+            <a 
+              href="https://wa.me/5544999862409?text=Olá,%20gostaria%20de%20agendar%20uma%20consultoria."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:flex bg-[#1B5E3E] text-white px-5 py-2.5 rounded-full font-medium text-sm hover:bg-[#145230] transition-colors"
+            >
+              WhatsApp
+            </a>
+            
+            {/* Mobile Menu Button */}
+            <button 
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden p-2 text-gray-600"
+              aria-label="Menu"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {mobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile Menu */}
+      <div className={`mobile-menu fixed inset-0 z-40 bg-white lg:hidden ${mobileMenuOpen ? 'open' : ''}`}>
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-8">
+            <span className="text-lg font-semibold text-gray-900">Menu</span>
+            <button onClick={() => setMobileMenuOpen(false)} className="p-2">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <nav className="space-y-4">
+            {navItems.map((item) => (
+              <a 
+                key={item.href} 
+                href={item.href} 
+                onClick={() => setMobileMenuOpen(false)}
+                className="block text-xl text-gray-900 font-medium py-2 border-b border-gray-100"
+              >
+                {item.label}
+              </a>
+            ))}
+            <a 
+              href="https://wa.me/5544999862409?text=Olá,%20gostaria%20de%20agendar%20uma%20consultoria."
+              onClick={() => setMobileMenuOpen(false)}
+              className="block bg-[#1B5E3E] text-white text-center px-6 py-4 rounded-full font-medium mt-6"
+            >
+              Falar no WhatsApp
+            </a>
+          </nav>
+        </div>
       </div>
-    </header>
+    </>
   );
 }
 
 function Footer() {
   return (
-    <footer className="bg-black border-t border-white/10 py-12">
+    <footer className="bg-gray-900 text-white py-16">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#1B5E3E] to-[#C9A227] flex items-center justify-center">
-                <span className="text-white font-bold text-lg">V</span>
-              </div>
-              <span className="text-white font-semibold">Valdenilson Cardoso de Sá</span>
-            </div>
-            <p className="text-gray-400 text-sm">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+          <div className="md:col-span-2">
+            <h3 className="text-xl font-semibold mb-4">Valdenilson Cardoso de Sá</h3>
+            <p className="text-gray-400 mb-4">
               OAB/PR 102.384<br/>
               Advocacia empresarial e trabalhista em Maringá - PR
+            </p>
+            <p className="text-gray-400 text-sm">
+              Soluções jurídicas completas para empresas. Atuação com excelência em direito trabalhista, tributário e empresarial.
             </p>
           </div>
           
@@ -78,9 +150,10 @@ function Footer() {
             <h4 className="text-[#C9A227] font-semibold mb-4">快速 Links</h4>
             <ul className="space-y-2 text-gray-400 text-sm">
               <li><a href="#home" className="hover:text-white transition-colors">Home</a></li>
-              <li><a href="#sobre" className="hover:text-white transition-colors">Quem Somos</a></li>
+              <li><a href="#sobre" className="hover:text-white transition-colors">Sobre</a></li>
               <li><a href="#equipe" className="hover:text-white transition-colors">Equipe</a></li>
               <li><a href="#areas" className="hover:text-white transition-colors">Áreas de Atuação</a></li>
+              <li><a href="#planos" className="hover:text-white transition-colors">Planos</a></li>
             </ul>
           </div>
           
@@ -90,19 +163,12 @@ function Footer() {
               <li>📍 Maringá - PR</li>
               <li>📱 (44) 99986-2409</li>
               <li>📧 contato@valdenilson.adv.br</li>
+              <li className="pt-2">🕐 Seg a Sex: 08:00 - 18:00</li>
             </ul>
-          </div>
-          
-          <div>
-            <h4 className="text-[#C9A227] font-semibold mb-4">Horário</h4>
-            <p className="text-gray-400 text-sm">
-              Segunda a Sexta<br/>
-              08:00 - 18:00
-            </p>
           </div>
         </div>
         
-        <div className="border-t border-white/10 mt-8 pt-8 text-center text-gray-500 text-sm">
+        <div className="border-t border-gray-800 mt-10 pt-8 text-center text-gray-500 text-sm">
           © 2026 Valdenilson Cardoso de Sá Advogados. Todos os direitos reservados.
         </div>
       </div>
