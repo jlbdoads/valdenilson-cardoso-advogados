@@ -13,14 +13,14 @@ CREATE TABLE IF NOT EXISTS public.clientes (
 -- RLS
 ALTER TABLE public.clientes ENABLE ROW LEVEL SECURITY;
 
--- Policy: todos os usuários autenticados podem ver
-CREATE POLICY "Todos veem clientes" ON public.clientes
+-- Policy: usuários autenticados podem visualizar registros não removidos
+CREATE POLICY "Authenticated users can view active clientes" ON public.clientes
   FOR SELECT TO authenticated USING (deleted_at IS NULL);
 
--- Policy: apenas anonimos podem inserir (vai usar service role key)
-CREATE POLICY "Anonimos criam clientes" ON public.clientes
+-- Policy: usuários autenticados podem inserir registros
+CREATE POLICY "Authenticated users can insert clientes" ON public.clientes
   FOR INSERT TO authenticated WITH CHECK (true);
 
--- Policy: anonimos podem atualizar
-CREATE POLICY "Anonimos atualizam clientes" ON public.clientes
-  FOR UPDATE TO authenticated USING (deleted_at IS NULL);
+-- Policy: usuários autenticados podem atualizar registros não removidos
+CREATE POLICY "Authenticated users can update active clientes" ON public.clientes
+  FOR UPDATE TO authenticated USING (deleted_at IS NULL) WITH CHECK (deleted_at IS NULL OR deleted_at IS NOT NULL);
